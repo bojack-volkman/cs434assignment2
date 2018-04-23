@@ -12,7 +12,7 @@ using namespace std;
 
 int main(int argc, char* argv[]){
 	if(argv[1] == NULL){
-		cout << "I NEED AN INPUT" << endl;
+		cout << "Input file name after program name (knn_train.csv or knn_test.csv)" << endl;
 		return 0;
 	}
 	
