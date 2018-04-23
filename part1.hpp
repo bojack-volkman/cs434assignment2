@@ -6,6 +6,7 @@
 #include<fstream>
 #include<stdio.h>
 #include<string.h>
+#include<string>
 #include<algorithm>
 
 
@@ -15,6 +16,6 @@ struct values{
 };
 
 
-void get_points(std::vector<values>&, char*);
+void get_points(std::vector<values>&, std::string);
 void normalize(std::vector<values>&);
 

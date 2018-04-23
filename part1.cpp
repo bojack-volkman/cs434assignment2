@@ -10,15 +10,14 @@
 
 using namespace std;
 
-int main(int argc, char* argv[]){
-	if(argv[1] == NULL){
-		cout << "Input file name after program name (knn_train.csv or knn_test.csv)" << endl;
-		return 0;
-	}
+int main(){
 	
-	vector<values> all_values; //creates a vector that holds all the points
-	get_points(all_values, argv[1]);	
-	normalize(all_values);
+	string trainfile = "knn_train.csv";
+	string testfile = "knn_test.csv";
+	
+	vector<values> train_values; //creates a vector that holds all the points for training
+	get_points(train_values, trainfile);	
+	normalize(train_values);
 	
 /*	for(int i =0; i < all_values.size(); i++){
 		cout << all_values.at(i).weight << ", ";
@@ -29,12 +28,15 @@ int main(int argc, char* argv[]){
 	}*/
 	//cout << all_values.size() << endl;
 	
+	vector<values> test_values; //creates a vector that holds all the points for testing
+	get_points(test_values, testfile);	
+	normalize(test_values);	
 	
   return 0;
 }
 
 
-void get_points(vector<values>& all_values, char* filename){
+void get_points(vector<values>& all_values, string filename){
   int flip = 0; //The deliminator between x & y
   int i = 0;
   int pos = 0; // vector position variable 
@@ -43,7 +45,7 @@ void get_points(vector<values>& all_values, char* filename){
   memset (stringx, '\0', 250);
   values current_value;
 
-    ifstream input_file (filename); //opens the file example.input
+    ifstream input_file(filename.c_str()); //opens the file example.input
 
     if(input_file.is_open()){
       while(input_file.get(c)){
