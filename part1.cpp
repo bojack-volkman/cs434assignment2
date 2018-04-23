@@ -12,13 +12,14 @@ using namespace std;
 
 int main(int argc, char* argv[]){
 	if(argv[1] == NULL){
-		cout << "I NEED AN INPUT" << endl;
+		cout << "Input file name after program name" << endl;
 		return 0;
 	}
 	
 	vector<values> all_values; //creates a vector that holds all the points
 	get_points(all_values, argv[1]);	
 	
+	//prints first 5 columns of data
 	for(int i =0; i < all_values.size(); i++){
 		cout << all_values.at(i).weight << ", ";
 		cout << all_values.at(i).qualifiers.at(0) << ", ";
@@ -33,54 +34,56 @@ int main(int argc, char* argv[]){
 
 
 
-
+//function to retrieve data from a .csv file with a negative or positive 1 in the first column
 
 void get_points(vector<values>& all_values, char* filename){
-  int flip = 0; //The deliminator between x & y
-  int i = 0;
-  int pos = 0; // vector position variable 
-  char c;
-  char stringx[250];
+  int flip = 0; //Switch to deal with -1s
+  int i = 0; //index in string
+  int pos = 0; //vector position variable 
+  char c; //data delimiter
+  char stringx[250]; //string that contains a number
   memset (stringx, '\0', 250);
-  values current_value;
+  
+  values current_value; //temp values struct to read in data
 
     ifstream input_file (filename); //opens the file example.input
 
     if(input_file.is_open()){
       while(input_file.get(c)){
-		if( flip == 1){
+		
+		if( flip == 1){ 						//skips a 1 if the first char is negative
 			pos++;
 			flip = 0;
 		}
 		else if( c == '\n' ){					//If it's a newline
 			current_value.qualifiers.push_back(atof(stringx));
-			all_values.push_back(current_value); //adds it to the vector
+			all_values.push_back(current_value); //pushes it to the vector
 			memset (stringx, '\0', 250);			//Clear string
-			current_value.qualifiers.clear();
+			current_value.qualifiers.clear();		//clear temp values struct
 			i = 0;									//Reset the string counter
-			pos = 0;					//starting a new line
+			pos = 0;								//reset vector position line
 		}
 		else if(pos == 0){
 			if(c == '-'){
-				current_value.weight = 0;
-				flip = 1;					//We need to skip 1.
+				current_value.weight = 0;	//binary variable; 0 instead of -1
+				flip = 1;					//flips switch to skip a char.
 			} else{
 				current_value.weight = 1;
 			}
 			pos++;
 	
 		}
-        else if( c != ',' ){
-			stringx[i] = c;				//If there is not a comma. Add it to the X string
-			i++;
-			pos++;
+        else if( c != ',' ){			//If there is not a comma, add char to string
+			stringx[i] = c;				
+			i++;						//next string char
+			pos++;						//next vector position
         }
 		else if( c == ','){
 			if(i > 0){
 				current_value.qualifiers.push_back(atof(stringx));	
 			}
 			memset (stringx, '\0', 250);		//Clear the string.
-			i = 0;				//Reset the sting counter
+			i = 0;				//Reset the string counter
 			pos++;
 		}
       }

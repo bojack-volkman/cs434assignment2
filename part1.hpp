@@ -8,12 +8,11 @@
 #include<string.h>
 #include<algorithm>
 
-
+//contains one data point, plus its weight
 struct values{
   std::vector<float> qualifiers;
   bool weight;
 };
-
 
 void get_points(std::vector<values>&, char*);
 
