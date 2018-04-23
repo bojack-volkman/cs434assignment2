@@ -1,10 +1,10 @@
 /*********************************************************************
- ** Program Filename:  Enhanced_Divide_And_Concoqer.cpp
- ** Author: Austin Hodgin, Justin Sherburne
- ** Date: 1/28/17
- ** Description: Finds the two closest points using Navive_Divide_And_Concoqer (O(nlogn))
- ** Input: example.input (points.txt)
- ** Output: output_enhanceddnc.txt
+ ** Program Filename:  part1.cpp
+ ** Author: Justin Sherburne
+ ** Date: 4/22/18
+ ** Description: 
+ ** Input: 
+ ** Output:
  *********************************************************************/
 #include "part1.hpp"
 
