@@ -1,9 +1,9 @@
 all:
-		g++  Enhanced_Divide_And_Conquer.cpp -o part1
+		g++  part1.cpp -o part1
 
 enhance:
 		rm -f  part1 
-		g++  Enhanced_Divide_And_Conquer.cpp -o part1
+		g++  part1.cpp -o part1
 
 
 clean:
