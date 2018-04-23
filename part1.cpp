@@ -18,21 +18,20 @@ int main(int argc, char* argv[]){
 	
 	vector<values> all_values; //creates a vector that holds all the points
 	get_points(all_values, argv[1]);	
+	normalize(all_values);
 	
-	for(int i =0; i < all_values.size(); i++){
+/*	for(int i =0; i < all_values.size(); i++){
 		cout << all_values.at(i).weight << ", ";
 		cout << all_values.at(i).qualifiers.at(0) << ", ";
 		cout << all_values.at(i).qualifiers.at(1) << ", ";
 		cout << all_values.at(i).qualifiers.at(2) << ", ";
 		cout << all_values.at(i).qualifiers.at(3) << endl;
-	}
+	}*/
 	//cout << all_values.size() << endl;
+	
 	
   return 0;
 }
-
-
-
 
 
 void get_points(vector<values>& all_values, char* filename){
@@ -88,6 +87,41 @@ void get_points(vector<values>& all_values, char* filename){
     }else{
       cout << "Unable to open file";
     }
+}
+
+
+
+void normalize(vector<values>& all_values){
+	vector<float> maximums, minimums;		//Store the maximum value in an expanding vector
+	float norm = 0;
+	
+	//First loop to find the max of each column.
+	for(int i = 0; i < all_values.at(0).qualifiers.size(); i++){
+		float max =0, min =0;
+		for(int j = 0; j < all_values.size(); j++){
+			if(all_values.at(j).qualifiers.at(i) > max){	//if x > y, store x
+				max = all_values.at(j).qualifiers.at(i);
+			}
+			if(all_values.at(j).qualifiers.at(i) < min){	//if x > y, store x
+				min = all_values.at(j).qualifiers.at(i);
+			}
+		}
+		maximums.push_back(max);
+		minimums.push_back(min);
+	}
+	
+/*	for(int i =0; i < maximums.size(); i++){
+		cout << maximums.at(i) << endl;
+	}*/
+	
+	
+	//Second loop to normalize
+	for(int i = 0; i < all_values.at(0).qualifiers.size(); i++){
+		for(int j = 0; j < all_values.size(); j++){
+			norm = ((all_values.at(j).qualifiers.at(i) - minimums.at(i))/(maximums.at(i) - minimums.at(i)));
+			all_values.at(j).qualifiers.at(i) = norm;
+		}
+	}	
 }
 
 

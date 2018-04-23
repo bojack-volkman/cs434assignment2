@@ -16,4 +16,5 @@ struct values{
 
 
 void get_points(std::vector<values>&, char*);
+void normalize(std::vector<values>&);
 
