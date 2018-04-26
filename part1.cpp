@@ -19,6 +19,10 @@ int main(){
 	get_points(train_values, trainfile);	
 	normalize(train_values);
 	
+	vector<values> test_values; //creates a vector that holds all the points for testing
+	get_points(test_values, testfile);	
+	normalize(test_values);	
+	
 /*	for(int i =0; i < all_values.size(); i++){
 		cout << all_values.at(i).weight << ", ";
 		cout << all_values.at(i).qualifiers.at(0) << ", ";
@@ -28,9 +32,7 @@ int main(){
 	}*/
 	//cout << all_values.size() << endl;
 	
-	vector<values> test_values; //creates a vector that holds all the points for testing
-	get_points(test_values, testfile);	
-	normalize(test_values);	
+
 	
   return 0;
 }
@@ -125,6 +127,8 @@ void normalize(vector<values>& all_values){
 		}
 	}	
 }
+
+
 
 
 
