@@ -33,6 +33,8 @@ int main(){
 	cout << train_values.size() << endl;
 	cout << test_values.size() << endl;
 	
+	neighborize(train_values, test_values, 1);
+	
 
 	
   return 0;
@@ -130,15 +132,31 @@ void normalize(vector<values>& all_values){
 }
 
 void neighborize(vector<values>& train_values, vector<values>& test_values, int k){
-	vector<float> distances;		// This will contain the distances from one point to all other points. 
+	std::vector<float> sample;
+	std::vector<float> distances;		// This will contain the distances from one point to all other points. 
 	distances.clear();				//Clear for safe measure.
+	sample.clear();
 	
+	float dist =0;
 	
+	for(int i = 0; i < test_values.size(); i++){   //for each teest value
+		for(int j = 0; j < train_values.size(); j++){  //go through all train values
+			dist = mydistance(test_values.at(i).qualifiers, train_values.at(j).qualifiers);
+			distances.push_back(dist);
+		}
+		
+		for(int l = 0; l < distances.size; l++){
+		//Find shortest distances here....	
+			
+		}
+		//cout << distances.size() << endl;
+		distances.clear();
+	}
 	
 	
 }
 
-float distance(vector<float> point1, vector<float> point2){
+float mydistance(std::vector<float> point1, std::vector<float> point2){
 	float x = 0;
 	float y = 0;
 	for(int i = 0; i < point1.size(); i++){
