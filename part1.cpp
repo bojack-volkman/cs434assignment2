@@ -23,14 +23,15 @@ int main(){
 	get_points(test_values, testfile);	
 	normalize(test_values);	
 	
-/*	for(int i =0; i < all_values.size(); i++){
-		cout << all_values.at(i).weight << ", ";
-		cout << all_values.at(i).qualifiers.at(0) << ", ";
-		cout << all_values.at(i).qualifiers.at(1) << ", ";
-		cout << all_values.at(i).qualifiers.at(2) << ", ";
-		cout << all_values.at(i).qualifiers.at(3) << endl;
+/*	for(int i =0; i < train_values.size(); i++){
+		cout << train_values.at(i).weight << ", ";
+		cout << train_values.at(i).qualifiers.at(0) << ", ";
+		cout << train_values.at(i).qualifiers.at(1) << ", ";
+		cout << train_values.at(i).qualifiers.at(2) << ", ";
+		cout << train_values.at(i).qualifiers.at(3) << endl;
 	}*/
-	//cout << all_values.size() << endl;
+	cout << train_values.size() << endl;
+	cout << test_values.size() << endl;
 	
 
 	
@@ -126,6 +127,28 @@ void normalize(vector<values>& all_values){
 			all_values.at(j).qualifiers.at(i) = norm;
 		}
 	}	
+}
+
+void neighborize(vector<values>& train_values, vector<values>& test_values, int k){
+	vector<float> distances;		// This will contain the distances from one point to all other points. 
+	distances.clear();				//Clear for safe measure.
+	
+	
+	
+	
+}
+
+float distance(vector<float> point1, vector<float> point2){
+	float x = 0;
+	float y = 0;
+	for(int i = 0; i < point1.size(); i++){
+		y = (point1.at(i) + point2.at(i));      // x1+y1 , x2+y2,....
+		y = y*y;								// y^2
+		x = x+y;								//Accumulate points into x
+		y = 0;
+	}
+	x = sqrt(x);								//sqrt(everything)
+	return x;									//distance
 }
 
 
