@@ -10,11 +10,15 @@
 
 using namespace std;
 
-int main(){
-	
+int main(int argc, char* argv[]){
+	if(argv[1] == NULL){
+		cout << "Please specify a K value" << endl;
+		return 0;
+	}
 	string trainfile = "knn_train.csv";
 	string testfile = "knn_test.csv";
-	
+	int errors =0;
+	int k = atoi(argv[1]);
 	vector<values> train_values; //creates a vector that holds all the points for training
 	get_points(train_values, trainfile);	
 	normalize(train_values);
@@ -30,12 +34,13 @@ int main(){
 		cout << train_values.at(i).qualifiers.at(2) << ", ";
 		cout << train_values.at(i).qualifiers.at(3) << endl;
 	}*/
-	cout << train_values.size() << endl;
-	cout << test_values.size() << endl;
+	//cout << train_values.size() << endl;
+	//cout << test_values.size() << endl;
 	
-	neighborize(train_values, test_values, 1);
-	
-
+	for(k=0; k < 50; k++){
+		errors = neighborize(train_values, test_values, k);
+		cout << "For K = " << k << " Total Errors = " << errors << endl;
+	}
 	
   return 0;
 }
@@ -99,12 +104,12 @@ void get_points(vector<values>& all_values, string filename){
 
 
 void normalize(vector<values>& all_values){
-	vector<float> maximums, minimums;		//Store the maximum value in an expanding vector
-	float norm = 0;
+	vector<double> maximums, minimums;		//Store the maximum value in an expanding vector
+	double norm = 0;
 	
 	//First loop to find the max of each column.
 	for(int i = 0; i < all_values.at(0).qualifiers.size(); i++){
-		float max =0, min =0;
+		double max =0, min =0;
 		for(int j = 0; j < all_values.size(); j++){
 			if(all_values.at(j).qualifiers.at(i) > max){	//if x > y, store x
 				max = all_values.at(j).qualifiers.at(i);
@@ -131,13 +136,17 @@ void normalize(vector<values>& all_values){
 	}	
 }
 
-void neighborize(vector<values>& train_values, vector<values>& test_values, int k){
-	std::vector<float> sample;
-	std::vector<float> distances;		// This will contain the distances from one point to all other points. 
+int neighborize(vector<values>& train_values, vector<values>& test_values, int k){
+	std::vector<double> shortdist;
+	std::vector<int> position;
+	std::vector<double> distances;		// This will contain the distances from one point to all other points. 
 	distances.clear();				//Clear for safe measure.
-	sample.clear();
-	
-	float dist =0;
+	shortdist.clear();
+	position.clear();
+	int errors = 0;
+	int positives = 0;
+	bool neighbors = 0;
+	double dist =0;
 	
 	for(int i = 0; i < test_values.size(); i++){   //for each teest value
 		for(int j = 0; j < train_values.size(); j++){  //go through all train values
@@ -145,20 +154,57 @@ void neighborize(vector<values>& train_values, vector<values>& test_values, int 
 			distances.push_back(dist);
 		}
 		
-		for(int l = 0; l < distances.size; l++){
-		//Find shortest distances here....	
-			
+		for(int h = 0; h <= k; h++){    //find the k smallest distances.
+			shortdist.push_back(10000);  //push some placeholders. shortdist needs to be large for later...
+			position.push_back(1);    //size doesnt matter here...
+			for(int l = 0; l < distances.size(); l++){
+				if(distances.at(l) < shortdist.at(h)){	//if it's smaller than shortdist
+						shortdist.at(h) = distances.at(l);
+						position.at(h) = l;
+				}		
+			}
+			//cleanup distances to avoid duplicates
+			distances.at(position.at(h)) = 1000;
 		}
-		//cout << distances.size() << endl;
-		distances.clear();
+		
+		/*you now have a list of k smallest distances in shortdist<>, and the positions in the test data stored in position<>.
+		for(int h = 0; h <= k; h++){
+		cout << distances.at(position.at(h)) << "== 1000" << endl;	
+		cout << "Shortest: " << shortdist.at(h) << endl;
+		cout << "Location: " << position.at(h) << endl;
+		}*/
+		
+		//Now we find if it is a positive or negative point
+		for(int h = 0; h <= k; h++){
+			if(test_values.at(position.at(h)).weight == 1)
+				positives++;									//count the neighbors
+		}
+		
+		if(positives >= (k/2)){  	//classify the point
+			neighbors = 1;
+		}else{
+			neighbors = 0;
+		}
+		//cout << positives << " : " << (k/2) << endl;
+		if(test_values.at(i).weight != neighbors){ 	//check if KNN worked
+			errors++;
+		}
+
+		distances.clear();				//Clear for next point.
+		shortdist.clear();
+		position.clear();
+		neighbors = 0;
+		positives =0;
 	}
 	
-	
+	return errors;
+		//cout << distances.size() << endl;
+		//distances.clear();
 }
 
-float mydistance(std::vector<float> point1, std::vector<float> point2){
-	float x = 0;
-	float y = 0;
+double mydistance(std::vector<double> point1, std::vector<double> point2){
+	double x = 0;
+	double y = 0;
 	for(int i = 0; i < point1.size(); i++){
 		y = (point1.at(i) + point2.at(i));      // x1+y1 , x2+y2,....
 		y = y*y;								// y^2

@@ -11,14 +11,14 @@
 
 
 struct values{
-  std::vector<float> qualifiers;
-  bool weight;
+  std::vector<double> qualifiers;
+  bool weight;     //1 for positive, 0 for negative
 };
 
 
 
 void get_points(std::vector<values>&, std::string);
 void normalize(std::vector<values>&);
-void neighborize(std::vector<values>&, std::vector<values>&, int);
-float mydistance(std::vector<float>, std::vector<float>);
+int neighborize(std::vector<values>&, std::vector<values>&, int);
+double mydistance(std::vector<double>, std::vector<double>);
 
