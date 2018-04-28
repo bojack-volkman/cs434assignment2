@@ -37,7 +37,7 @@ int main(int argc, char* argv[]){
 	//cout << train_values.size() << endl;
 	//cout << test_values.size() << endl;
 	
-	for(k=0; k < 50; k++){
+	for(k=0; k < 80; k++){
 		errors = neighborize(train_values, test_values, k);
 		cout << "For K = " << k << " Total Errors = " << errors << endl;
 	}
@@ -206,7 +206,7 @@ double mydistance(std::vector<double> point1, std::vector<double> point2){
 	double x = 0;
 	double y = 0;
 	for(int i = 0; i < point1.size(); i++){
-		y = (point1.at(i) + point2.at(i));      // x1+y1 , x2+y2,....
+		y = (point1.at(i) - point2.at(i));      // x1+y1 , x2+y2,....
 		y = y*y;								// y^2
 		x = x+y;								//Accumulate points into x
 		y = 0;
