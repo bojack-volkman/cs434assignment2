@@ -203,15 +203,15 @@ int neighborize(vector<values>& train_values, vector<values>& test_values, int k
 }
 
 double mydistance(std::vector<double> point1, std::vector<double> point2){
-	double x = 0;
-	double y = 0;
+	double x = 0;	//distance accumulator
+	double y = 0;	//temp var
 	for(int i = 0; i < point1.size(); i++){
-		y = (point1.at(i) + point2.at(i));      // x1+y1 , x2+y2,....
-		y = y*y;								// y^2
-		x = x+y;								//Accumulate points into x
+		y = (point1.at(i) - point2.at(i));      // x1+y1 , x2+y2,....
+		y = y*y;								// y^2, squared distance
+		x = x+y;								//Accumulate distances into x
 		y = 0;
 	}
-	x = sqrt(x);								//sqrt(everything)
+	//x = sqrt(x);								//sqrt(everything)
 	return x;									//distance
 }
 
