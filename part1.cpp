@@ -37,6 +37,10 @@ int main(int argc, char* argv[]){
 	//cout << train_values.size() << endl;
 	//cout << test_values.size() << endl;
 	
+	//errors = neighborize(train_values, test_values, k);
+	//cout << "For K = " << k << " Total Errors = " << errors << endl;
+	
+	
 	for(k=0; k < 50; k++){
 		errors = neighborize(train_values, test_values, k);
 		cout << "For K = " << k << " Total Errors = " << errors << endl;
@@ -154,7 +158,7 @@ int neighborize(vector<values>& train_values, vector<values>& test_values, int k
 			distances.push_back(dist);
 		}
 		
-		for(int h = 0; h <= k; h++){    //find the k smallest distances.
+		for(int h = 0; h < k; h++){    //find the k smallest distances.
 			shortdist.push_back(10000);  //push some placeholders. shortdist needs to be large for later...
 			position.push_back(1);    //size doesnt matter here...
 			for(int l = 0; l < distances.size(); l++){
@@ -175,26 +179,29 @@ int neighborize(vector<values>& train_values, vector<values>& test_values, int k
 		}*/
 		
 		//Now we find if it is a positive or negative point
-		for(int h = 0; h <= k; h++){
-			if(test_values.at(position.at(h)).weight == 1)
-				positives++;									//count the neighbors
+		for(int h = 0; h < k; h++){
+			if(train_values.at(position.at(h)).weight == 1){
+				positives++;				//count the neighbors
+			}
 		}
-		
 		if(positives >= (k/2)){  	//classify the point
 			neighbors = 1;
 		}else{
 			neighbors = 0;
 		}
+		if(k == 1){
+			neighbors = positives;
+		}
 		//cout << positives << " : " << (k/2) << endl;
 		if(test_values.at(i).weight != neighbors){ 	//check if KNN worked
 			errors++;
 		}
-
+		
 		distances.clear();				//Clear for next point.
 		shortdist.clear();
 		position.clear();
 		neighbors = 0;
-		positives =0;
+		positives = 0;
 	}
 	
 	return errors;
@@ -211,7 +218,7 @@ double mydistance(std::vector<double> point1, std::vector<double> point2){
 		x = x+y;								//Accumulate distances into x
 		y = 0;
 	}
-	//x = sqrt(x);								//sqrt(everything)
+	x = sqrt(x);								//sqrt(everything)
 	return x;									//distance
 }
 
