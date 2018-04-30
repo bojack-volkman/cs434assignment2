@@ -1,5 +1,6 @@
 #Part 2
 # Created by Scott Russell
+#Team with Justin Sherburne and Jacob Volkman
 #CS 434: Spring 2018
 
 #Used https://machinelearningmastery.com/implement-decision-tree-algorithm-scratch-python/
