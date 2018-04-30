@@ -1,24 +1,20 @@
 /*********************************************************************
  ** Program Filename:  part1.cpp
- ** Author: Justin Sherburne
+ ** Author: Justin Sherburne, Scott Russell, Jacob Volkman
  ** Date: 4/22/18
- ** Description: 
- ** Input: 
- ** Output:
+ ** Description: Take's two CSV files and run's K-nearest neighbor calculations
+ ** Input: knn_train.csv knn_test.csv
+ ** Output: output.csv
  *********************************************************************/
 #include "part1.hpp"
 
 using namespace std;
 
-int main(int argc, char* argv[]){
-	if(argv[1] == NULL){
-		cout << "Please specify a K value" << endl;
-		return 0;
-	}
+int main(){
 	string trainfile = "knn_train.csv";
 	string testfile = "knn_test.csv";
-	int errors =0;
-	int k = atoi(argv[1]);
+	vector<int> errors;
+	int k = 0;
 	vector<values> train_values; //creates a vector that holds all the points for training
 	get_points(train_values, trainfile);	
 	normalize(train_values);
@@ -41,10 +37,11 @@ int main(int argc, char* argv[]){
 	//cout << "For K = " << k << " Total Errors = " << errors << endl;
 	
 	
-	for(k=0; k < 50; k++){
-		errors = neighborize(train_values, test_values, k);
-		cout << "For K = " << k << " Total Errors = " << errors << endl;
+	for(k = 0; k < 250; k++){
+		errors.push_back(neighborize(train_values, train_values, k));
+		cout << "running K = " << k << endl;
 	}
+	write_file(errors, 250);
 	
   return 0;
 }
@@ -218,12 +215,22 @@ double mydistance(std::vector<double> point1, std::vector<double> point2){
 		x = x+y;								//Accumulate distances into x
 		y = 0;
 	}
-	x = sqrt(x);								//sqrt(everything)
+	//x = sqrt(x);								//sqrt(everything)
 	return x;									//distance
 }
 
 
-
+void write_file(vector<int> errors, int kmax){
+ofstream output_file;
+output_file.open("output.csv");
+	for(unsigned i = 0; i < errors.size(); i++){
+		output_file << i;
+		output_file << ",";
+		output_file << errors[i];
+		output_file << endl;
+		i++;
+    }
+}
 
 
 

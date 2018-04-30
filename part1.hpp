@@ -21,4 +21,5 @@ void get_points(std::vector<values>&, std::string);
 void normalize(std::vector<values>&);
 int neighborize(std::vector<values>&, std::vector<values>&, int);
 double mydistance(std::vector<double>, std::vector<double>);
+void write_file(std::vector<int>, int);
 
