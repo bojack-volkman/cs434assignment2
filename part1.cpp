@@ -10,11 +10,20 @@
 
 using namespace std;
 
-int main(){
+int main(int argc, char *argv[]){
 	string trainfile = "knn_train.csv";
 	string testfile = "knn_test.csv";
 	vector<int> errors;
+	
+	if(argv[1] == NULL || argv[2] != NULL){
+		cout << "Correct command is:" << endl;
+		cout << "Part1 1    :for train_data vs train_data" << endl;
+		cout << "Part1 2    :for train_data vs test_data" << endl;
+		return 0;
+	}
+	
 	int k = 0;
+	int select = atoi(argv[1]);
 	vector<values> train_values; //creates a vector that holds all the points for training
 	get_points(train_values, trainfile);	
 	normalize(train_values);
@@ -23,29 +32,27 @@ int main(){
 	get_points(test_values, testfile);	
 	normalize(test_values);	
 	
-/*	for(int i =0; i < train_values.size(); i++){
-		cout << train_values.at(i).weight << ", ";
-		cout << train_values.at(i).qualifiers.at(0) << ", ";
-		cout << train_values.at(i).qualifiers.at(1) << ", ";
-		cout << train_values.at(i).qualifiers.at(2) << ", ";
-		cout << train_values.at(i).qualifiers.at(3) << endl;
-	}*/
-	//cout << train_values.size() << endl;
-	//cout << test_values.size() << endl;
-	
-	//errors = neighborize(train_values, test_values, k);
-	//cout << "For K = " << k << " Total Errors = " << errors << endl;
-	
-	
-	for(k = 0; k < 250; k++){
-		errors.push_back(neighborize(train_values, train_values, k));
-		cout << "running K = " << k << endl;
+
+	if(select == 1){
+		for(k = 0; k < 250; k++){
+			errors.push_back(neighborize(train_values, train_values, k));
+			cout << "running K = " << k << endl;
+		}
+		write_file(errors, 250);
+	}	
+	if(select == 2){
+		for(k = 0; k < 250; k++){
+			errors.push_back(neighborize(train_values, test_values, k));
+			cout << "running K = " << k << endl;
+		}
+		write_file(errors, 250);
 	}
-	write_file(errors, 250);
 	
   return 0;
 }
 
+
+//Function used for reading in the values
 
 void get_points(vector<values>& all_values, string filename){
   int flip = 0; //The deliminator between x & y
@@ -103,6 +110,7 @@ void get_points(vector<values>& all_values, string filename){
 }
 
 
+//Normalizing function for the vector set
 
 void normalize(vector<values>& all_values){
 	vector<double> maximums, minimums;		//Store the maximum value in an expanding vector
@@ -136,6 +144,9 @@ void normalize(vector<values>& all_values){
 		}
 	}	
 }
+
+
+//The main calculation for k-nearest neighbor
 
 int neighborize(vector<values>& train_values, vector<values>& test_values, int k){
 	std::vector<double> shortdist;
@@ -206,6 +217,9 @@ int neighborize(vector<values>& train_values, vector<values>& test_values, int k
 		//distances.clear();
 }
 
+
+//Fairly simple distance calculation
+
 double mydistance(std::vector<double> point1, std::vector<double> point2){
 	double x = 0;	//distance accumulator
 	double y = 0;	//temp var
@@ -219,6 +233,8 @@ double mydistance(std::vector<double> point1, std::vector<double> point2){
 	return x;									//distance
 }
 
+
+//Used to write the file output.csv
 
 void write_file(vector<int> errors, int kmax){
 ofstream output_file;

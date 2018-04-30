@@ -13,8 +13,7 @@ using namespace std;
 int main(){
 	string trainfile = "knn_train.csv";
 	string testfile = "knn_test.csv";
-	
-	int k = 0;
+
 	vector<values> train_values; //creates a vector that holds all the points for training
 	get_points(train_values, trainfile);	
 	normalize(train_values);
@@ -26,42 +25,31 @@ int main(){
 	get_points(test_values, testfile);	
 	normalize(test_values);	
 	
-/*	for(int i =0; i < train_values.size(); i++){
-		cout << train_values.at(i).weight << ", ";
-		cout << train_values.at(i).qualifiers.at(0) << ", ";
-		cout << train_values.at(i).qualifiers.at(1) << ", ";
-		cout << train_values.at(i).qualifiers.at(2) << ", ";
-		cout << train_values.at(i).qualifiers.at(3) << endl;
-	}*/
-	//cout << train_values.size() << endl;
-	//cout << test_values.size() << endl;
-	
-	//errors = neighborize(train_values, test_values, k);
-	//cout << "For K = " << k << " Total Errors = " << errors << endl;
+
+	//Here we are iterating through the test data while leaving out one point each time
+	//The point removed is then tested against k=1 -> k=250 neighbors to determine the error
 	
 	
-/* 	for(k = 0; k < 250; k++){
-		errors.push_back(neighborize(train_values, train_values, k));
-		cout << "running K = " << k << endl;
-	}*/
-	for(int i=0; i < train_values.size(); i++){
+	for(int i=0; i < train_values.size(); i++){     
 		for(int k=0; k < 250; k++){	
-			vector<values> loo_train(train_values);
+			vector<values> loo_train(train_values);			//New vectors
 			vector<values> loo_test;
-			loo_test.push_back(train_values.at(i));
-			loo_train.erase (loo_train.begin()+i);
+			loo_test.push_back(train_values.at(i));			//Save the one point
+			loo_train.erase (loo_train.begin()+i);			//erase the 1 from the "training data"
 			//errors.push_back(neighborize(loo_train, loo_test, 20));
 			errors[i][k] = (neighborize(loo_train, loo_test, k));
-			loo_test.clear();
+			loo_test.clear();								//Cleanup
 			loo_train.clear();
 		}
-		cout << i << endl;
+		cout << "Leaving out point: " << i << endl;
 	}
-	write_file(errors, 250);
+	write_file(errors, 250);			 //(modified to use 2-d vector)
 	
   return 0;
 }
 
+
+//Function used for reading in the values
 
 void get_points(vector<values>& all_values, string filename){
   int flip = 0; //The deliminator between x & y
@@ -119,6 +107,7 @@ void get_points(vector<values>& all_values, string filename){
 }
 
 
+//Normalizing function for the vector set
 
 void normalize(vector<values>& all_values){
 	vector<double> maximums, minimums;		//Store the maximum value in an expanding vector
@@ -152,6 +141,9 @@ void normalize(vector<values>& all_values){
 		}
 	}	
 }
+
+
+//The main calculation for k-nearest neighbor
 
 int neighborize(vector<values>& train_values, vector<values>& test_values, int k){
 	std::vector<double> shortdist;
@@ -222,6 +214,9 @@ int neighborize(vector<values>& train_values, vector<values>& test_values, int k
 		//distances.clear();
 }
 
+
+//Fairly simple distance calculation
+
 double mydistance(std::vector<double> point1, std::vector<double> point2){
 	double x = 0;	//distance accumulator
 	double y = 0;	//temp var
@@ -235,6 +230,8 @@ double mydistance(std::vector<double> point1, std::vector<double> point2){
 	return x;									//distance
 }
 
+
+//Used to write the file output.csv (modified to use 2-d vector)
 
 void write_file(vector< vector<int> > errors, int kmax){
 ofstream output_file;
